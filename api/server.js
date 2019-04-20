@@ -27,8 +27,12 @@ server.get('/games', async (req, res) => {
 server.post('/games', async (req, res) => {
   try {
     const newGame = req.body
-    const game = await Games.add(newGame);
-    res.status(201).json({game})
+    if(newGame.title && newGame.genre) {
+      const game = await Games.add(newGame);
+      res.status(201).json({game})
+    } else {
+      res.status(422).json({message: 'Missing data. Try again.'})
+    }
   } catch (error) {
     res.status(500).json({err: 'Something happened while adding your game.'})
   }

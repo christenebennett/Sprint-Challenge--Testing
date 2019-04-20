@@ -22,6 +22,9 @@ describe('The server', () => {
   })
 
   describe('GET /games', () => {
+    beforeEach(() => {
+      return db('games').truncate();
+    })
     it('should return status 200', async () => {
       const res = await request(server).get('/games');
       expect(res.status).toBe(200);
@@ -33,6 +36,11 @@ describe('The server', () => {
     })
 
     it ('should return list of games', async () => {
+      const body = { 
+        title: 'Mortal Kombat',
+        genre: 'Fighting'
+      }
+      await request(server).post('/games').send(body);
       const res = await request(server).get('/games');
       expect(res.body.length).toBe(1)
     })
@@ -62,12 +70,12 @@ describe('The server', () => {
       expect(res.status).toBe(201);
     })
 
-    it('should return status 500 when body is not correct', async () => {
+    it('should return status 422 when body is not complete', async () => {
       const body = { 
         title: 'Mortal Kombat'
       }
       const res = await request(server).post('/games').send(body);
-      expect(res.status).toBe(500);
+      expect(res.status).toBe(422);
     })
   })
 })
