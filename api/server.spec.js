@@ -25,6 +25,7 @@ describe('The server', () => {
     beforeEach(() => {
       return db('games').truncate();
     })
+    
     it('should return status 200', async () => {
       const res = await request(server).get('/games');
       expect(res.status).toBe(200);
@@ -43,6 +44,11 @@ describe('The server', () => {
       await request(server).post('/games').send(body);
       const res = await request(server).get('/games');
       expect(res.body.length).toBe(1)
+    })
+
+    it('should return an empty array if there are no games', async () => {
+      const res = await request(server).get('/games');
+      expect(res.body.length).toBe(0);
     })
   })
 
