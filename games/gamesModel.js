@@ -10,5 +10,6 @@ function getAll() {
 }
 
 async function add(game) {
-  return await db('games').insert(game);
+  const [id] = await db('games').insert(game);
+  return db('games').where("id", id).first();
 }

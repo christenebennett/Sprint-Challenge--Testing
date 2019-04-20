@@ -32,12 +32,42 @@ describe('The server', () => {
       expect(res.type).toBe('application/json')
     })
 
-    // it ('should return list of games', async () => {
-    //   const res = await request(server).get('/games');
-    //   expect(res.body).toEqual({ api: 'Welcome to the Games API!'})
-    // })
+    it ('should return list of games', async () => {
+      const res = await request(server).get('/games');
+      expect(res.body.length).toBe(1)
+    })
   })
 
+  describe('POST /games', () => {
+    beforeEach(() => {
+      return db('games').truncate();
+    })
+    
+    it('should return status 201 when body is correct', async () => {
+      const body = { 
+        title: 'Mortal Kombat',
+        genre: 'Fighting',
+        releaseYear: 1992
+      }
+      const res = await request(server).post('/games').send(body);
+      expect(res.status).toBe(201);
+    })
+    
+    it('should return status 201 when body does not contain release year', async () => {
+      const body = { 
+        title: 'Mortal Kombat',
+        genre: 'Fighting'
+      }
+      const res = await request(server).post('/games').send(body);
+      expect(res.status).toBe(201);
+    })
 
-  
+    it('should return status 500 when body is not correct', async () => {
+      const body = { 
+        title: 'Mortal Kombat'
+      }
+      const res = await request(server).post('/games').send(body);
+      expect(res.status).toBe(500);
+    })
+  })
 })

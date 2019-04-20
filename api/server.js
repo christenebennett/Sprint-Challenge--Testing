@@ -15,7 +15,7 @@ server.get('/', (req,res) => {
   }
 })
 
-server.get('/games', async (req,res) => {
+server.get('/games', async (req, res) => {
   try {
     const games = await Games.getAll();
     res.status(200).json(games)
@@ -24,5 +24,14 @@ server.get('/games', async (req,res) => {
   }
 })
 
+server.post('/games', async (req, res) => {
+  try {
+    const newGame = req.body
+    const game = await Games.add(newGame);
+    res.status(201).json({game})
+  } catch (error) {
+    res.status(500).json({err: 'Something happened while adding your game.'})
+  }
+})
 
 module.exports = server;
